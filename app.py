@@ -1132,7 +1132,7 @@ def popular_session_state(dados: dict):
     if rec_rows:
         st.session_state["n_rec"] = len(rec_rows)
         for i, r in enumerate(rec_rows):
-            # cult_ não é sobrescrito — sempre "Em todas as Culturas"
+            st.session_state[f"cult_{i}"] = str(r.get("cultura", ""))
             st.session_state[f"alv_{i}"]  = str(r.get("alvos", ""))
             st.session_state[f"dose_{i}"] = str(r.get("dose", ""))
             st.session_state[f"vol_{i}"]  = str(r.get("volume", ""))
@@ -1541,8 +1541,6 @@ with t4:
     for i in range(st.session_state.n_rec):
         c1, c2, c3, c4, c5 = st.columns([2, 2, 1, 1, 2])
         # Pré-preencher cultura com "Em todas as Culturas" se ainda não foi definida
-        if f"cult_{i}" not in st.session_state:
-            st.session_state[f"cult_{i}"] = "Todas as culturas com ocorrência do alvo biológico"
         cultura = c1.text_input("", key=f"cult_{i}",
                                 label_visibility="collapsed")
         alvos = c2.text_input("", placeholder="Alvos",  key=f"alv_{i}",
@@ -1984,7 +1982,7 @@ with t10:
             # Seção 7 — Recomendações
             for i, rv in enumerate(rec_rows):
                 n = i + 1
-                ph[f"cult_{n}"] = "Todas as culturas com ocorrência do alvo biológico"
+                ph[f"cult_{n}"] = rv.get("cultura", "")
                 ph[f"alvo_{n}"] = rv.get("alvos", "")
                 ph[f"dose_{n}"] = rv.get("dose", "")
                 ph[f"vol_{n}"] = rv.get("volume", "")
